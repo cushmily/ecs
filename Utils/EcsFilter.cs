@@ -17,7 +17,9 @@ namespace LeopotamGroup.Ecs {
     /// <summary>
     /// Container for filtered entities based on specified constraints.
     /// </summary>
-    public class EcsFilter<Inc1> : EcsFilter where Inc1 : class, new () {
+    public class EcsFilter<Inc1> : EcsFilter where Inc1 : class, new (){
+        public Action<int> OnComponentAdded;
+        public Action<int> OnComponentRemoved;
         public Inc1[] Components1;
         bool _allow1;
 
@@ -40,6 +42,7 @@ namespace LeopotamGroup.Ecs {
                 Components1[EntitiesCount] = _world.GetComponent<Inc1> (entity);
             }
             Entities[EntitiesCount++] = entity;
+            OnComponentAdded?.Invoke(entity);
         }
 #if NET_4_6
         [System.Runtime.CompilerServices.MethodImpl (System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -55,6 +58,7 @@ namespace LeopotamGroup.Ecs {
                     break;
                 }
             }
+            OnComponentRemoved?.Invoke(entity);
         }
 
         /// <summary>
@@ -83,6 +87,8 @@ namespace LeopotamGroup.Ecs {
     /// Container for filtered entities based on specified constraints.
     /// </summary>
     public class EcsFilter<Inc1, Inc2> : EcsFilter where Inc1 : class, new () where Inc2 : class, new () {
+        public Action<int> OnComponentAdded;
+        public Action<int> OnComponentRemoved;
         public Inc1[] Components1;
         public Inc2[] Components2;
         bool _allow1;
@@ -117,6 +123,7 @@ namespace LeopotamGroup.Ecs {
                 Components2[EntitiesCount] = _world.GetComponent<Inc2> (entity);
             }
             Entities[EntitiesCount++] = entity;
+            OnComponentAdded?.Invoke(entity);
         }
 #if NET_4_6
         [System.Runtime.CompilerServices.MethodImpl (System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -135,6 +142,7 @@ namespace LeopotamGroup.Ecs {
                     break;
                 }
             }
+            OnComponentRemoved?.Invoke(entity);
         }
 
         /// <summary>
@@ -163,6 +171,8 @@ namespace LeopotamGroup.Ecs {
     /// Container for filtered entities based on specified constraints.
     /// </summary>
     public class EcsFilter<Inc1, Inc2, Inc3> : EcsFilter where Inc1 : class, new () where Inc2 : class, new () where Inc3 : class, new () {
+        public Action<int> OnComponentAdded;
+        public Action<int> OnComponentRemoved;
         public Inc1[] Components1;
         public Inc2[] Components2;
         public Inc3[] Components3;
@@ -208,6 +218,7 @@ namespace LeopotamGroup.Ecs {
                 Components3[EntitiesCount] = _world.GetComponent<Inc3> (entity);
             }
             Entities[EntitiesCount++] = entity;
+            OnComponentAdded?.Invoke(entity);
         }
 #if NET_4_6
         [System.Runtime.CompilerServices.MethodImpl (System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -229,6 +240,7 @@ namespace LeopotamGroup.Ecs {
                     break;
                 }
             }
+            OnComponentRemoved?.Invoke(entity);
         }
 
         /// <summary>
@@ -257,6 +269,8 @@ namespace LeopotamGroup.Ecs {
     /// Container for filtered entities based on specified constraints.
     /// </summary>
     public class EcsFilter<Inc1, Inc2, Inc3, Inc4> : EcsFilter where Inc1 : class, new () where Inc2 : class, new () where Inc3 : class, new () where Inc4 : class, new () {
+        public Action<int> OnComponentAdded;
+        public Action<int> OnComponentRemoved;
         public Inc1[] Components1;
         public Inc2[] Components2;
         public Inc3[] Components3;
@@ -313,6 +327,7 @@ namespace LeopotamGroup.Ecs {
                 Components4[EntitiesCount] = _world.GetComponent<Inc4> (entity);
             }
             Entities[EntitiesCount++] = entity;
+            OnComponentAdded?.Invoke(entity);
         }
 #if NET_4_6
         [System.Runtime.CompilerServices.MethodImpl (System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -337,6 +352,7 @@ namespace LeopotamGroup.Ecs {
                     break;
                 }
             }
+            OnComponentRemoved?.Invoke(entity);
         }
 
         /// <summary>
@@ -365,6 +381,8 @@ namespace LeopotamGroup.Ecs {
     /// Container for filtered entities based on specified constraints.
     /// </summary>
     public class EcsFilter<Inc1, Inc2, Inc3, Inc4, Inc5> : EcsFilter where Inc1 : class, new () where Inc2 : class, new () where Inc3 : class, new () where Inc4 : class, new () where Inc5 : class, new () {
+        public Action<int> OnComponentAdded;
+        public Action<int> OnComponentRemoved;
         public Inc1[] Components1;
         public Inc2[] Components2;
         public Inc3[] Components3;
@@ -432,6 +450,7 @@ namespace LeopotamGroup.Ecs {
                 Components5[EntitiesCount] = _world.GetComponent<Inc5> (entity);
             }
             Entities[EntitiesCount++] = entity;
+            OnComponentAdded?.Invoke(entity);
         }
 #if NET_4_6
         [System.Runtime.CompilerServices.MethodImpl (System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -459,6 +478,7 @@ namespace LeopotamGroup.Ecs {
                     break;
                 }
             }
+            OnComponentRemoved?.Invoke(entity);
         }
 
         /// <summary>
