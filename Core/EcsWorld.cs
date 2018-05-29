@@ -5,7 +5,6 @@
 // ----------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using LeopotamGroup.Ecs.Internals;
 
 namespace LeopotamGroup.Ecs {
@@ -28,7 +27,13 @@ namespace LeopotamGroup.Ecs {
     /// <summary>
     /// Basic ecs world implementation.
     /// </summary>
-    public class EcsWorld : IEcsReadOnlyWorld {
+    public class EcsWorld : IEcsReadOnlyWorld, IDisposable {
+        /// <summary>
+        /// Last created instance of EcsWorld.
+        /// Can be force reassigned manually when multiple worlds in use.
+        /// </summary>
+        public static EcsWorld Active = null;
+
         /// <summary>
         /// List of all entities (their components).
         /// </summary>
@@ -62,11 +67,21 @@ namespace LeopotamGroup.Ecs {
         /// </summary>
         readonly EcsComponentMask _delayedOpMask = new EcsComponentMask ();
 
+        public EcsWorld () {
+            Active = this;
+        }
+
+        public void Dispose () {
+            if (this == Active) {
+                Active = null;
+            }
+        }
+
 #if DEBUG
         /// <summary>
         /// List of all debug listeners.
         /// </summary>
-        readonly List<IEcsWorldDebugListener> _debugListeners = new List<IEcsWorldDebugListener> (4);
+        readonly System.Collections.Generic.List<IEcsWorldDebugListener> _debugListeners = new System.Collections.Generic.List<IEcsWorldDebugListener> (4);
 
         /// <summary>
         /// Adds external event listener.
@@ -191,32 +206,31 @@ namespace LeopotamGroup.Ecs {
         public T GetComponent<T> (int entity) where T : class, new () {
             var entityData = _entities[entity];
             var pool = EcsComponentPool<T>.Instance;
-            ComponentLink link;
-            link.ItemId = -1;
-            var i = entityData.ComponentsCount - 1;
-            for (; i >= 0; i--) {
-                link = entityData.Components[i];
-                if (link.Pool == pool) {
-                    break;
+            for (var i = 0; i < entityData.ComponentsCount; i++) {
+                if (entityData.Components[i].Pool == pool) {
+                    return pool.Items[entityData.Components[i].ItemId];
                 }
             }
-            return i != -1 ? pool.Items[link.ItemId] : null;
+            return null;
         }
 
         /// <summary>
         /// Gets all components on entity.
         /// </summary>
         /// <param name="entity">Entity.</param>
-        /// <param name="list">List to put results in it.</param>
-        public void GetComponents (int entity, IList<object> list) {
-            if (list != null) {
-                list.Clear ();
-                var entityData = _entities[entity];
-                for (var i = 0; i < entityData.ComponentsCount; i++) {
-                    var link = entityData.Components[i];
-                    list.Add (link.Pool.GetExistItemById (link.ItemId));
-                }
+        /// <param name="list">List to put results in it. if null - will be created.</param>
+        /// <returns>Amount of components in list.</returns>
+        public int GetComponents (int entity, ref object[] list) {
+            var entityData = _entities[entity];
+            var count = entityData.ComponentsCount;
+            if (list == null || list.Length < count) {
+                list = new object[entityData.ComponentsCount];
             }
+            for (var i = 0; i < count; i++) {
+                var link = entityData.Components[i];
+                list[i] = link.Pool.GetExistItemById (link.ItemId);
+            }
+            return count;
         }
 
         /// <summary>
