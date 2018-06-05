@@ -10,6 +10,9 @@ using System.Reflection;
 namespace LeopotamGroup.Ecs {
     [AttributeUsage (AttributeTargets.Class)]
     public sealed class EcsInjectAttribute : Attribute { }
+    
+    [AttributeUsage (AttributeTargets.Class)]
+    public sealed class EcsIgnoreInjectAttribute : Attribute { }
 }
 
 namespace LeopotamGroup.Ecs.Internals {
@@ -23,7 +26,7 @@ namespace LeopotamGroup.Ecs.Internals {
     static class EcsInjections {
         public static void Inject (EcsWorld world, IEcsSystem system) {
             var systemType = system.GetType ();
-            if (!Attribute.IsDefined (systemType, typeof (EcsInjectAttribute))) {
+            if (Attribute.IsDefined (systemType, typeof (EcsIgnoreInjectAttribute))) {
                 return;
             }
             var worldType = world.GetType ();
